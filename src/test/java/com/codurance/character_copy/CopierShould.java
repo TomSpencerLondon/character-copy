@@ -6,18 +6,23 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class CopierShould {
 
   @Mock Source source;
-  @Mock Destination destination;
+  private DestinationSpy destinationSpy;
   private Copier copier;
 
   @BeforeEach
   void setUp() {
-    copier = new Copier(source, destination);
+    destinationSpy = new DestinationSpy();
+    copier = new Copier(source, destinationSpy);
   }
 
   @Test
@@ -33,7 +38,8 @@ public class CopierShould {
     when(source.getChar()).thenReturn(character)
             .thenReturn('\n');
     copier.copy();
-    verify(destination).setChar(character);
+    assertEquals(1, destinationSpy.getCharsCalled().size());
+    assertTrue(destinationSpy.getCharsCalled().contains(character));
   }
 
   @Test
@@ -49,12 +55,26 @@ public class CopierShould {
 
     copier.copy();
 
-    verify(destination).setChar(character1);
-    verify(destination).setChar(character2);
-    verify(destination, never()).setChar(character3);
-    verify(destination, never()).setChar(character4);
+    assertEquals(2, destinationSpy.getCharsCalled().size());
+    assertTrue(destinationSpy.getCharsCalled().contains(character1));
+    assertTrue(destinationSpy.getCharsCalled().contains(character2));
+    assertFalse(destinationSpy.getCharsCalled().contains(character3));
+    assertFalse(destinationSpy.getCharsCalled().contains(character4));
   }
 
-//  private class destinationSpy implements Destination {
-//  }
+  private class DestinationSpy implements Destination {
+    private List<Character> charsCalled;
+
+    public DestinationSpy() {
+      this.charsCalled = new ArrayList<>();
+    }
+
+    public void setChar(char character) {
+      charsCalled.add(character);
+    }
+
+    public List<Character> getCharsCalled() {
+      return charsCalled;
+    }
+  }
 }
