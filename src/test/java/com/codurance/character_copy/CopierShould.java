@@ -3,10 +3,10 @@ package com.codurance.character_copy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,29 +15,30 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class CopierShould {
 
-  @Mock Source source;
+  private SourceStub sourceStub;
   private DestinationSpy destinationSpy;
   private Copier copier;
 
   @BeforeEach
   void setUp() {
+    sourceStub = new SourceStub();
     destinationSpy = new DestinationSpy();
-    copier = new Copier(source, destinationSpy);
+    copier = new Copier(sourceStub, destinationSpy);
   }
 
   @Test
   void destination_should_receive_characters() {
-    when(source.getChar()).thenReturn('\n');
+    sourceStub.setInput(List.of('\n'));
     copier.copy();
-    verify(source).getChar();
+    assertEquals(1, sourceStub.timesCalled());
   }
 
   @Test
   void forward_character_to_the_destination() {
     char character = 'H';
-    when(source.getChar()).thenReturn(character)
-            .thenReturn('\n');
+    sourceStub.setInput(List.of(character, '\n'));
     copier.copy();
+
     assertEquals(1, destinationSpy.getCharsCalled().size());
     assertTrue(destinationSpy.getCharsCalled().contains(character));
   }
@@ -48,10 +49,7 @@ public class CopierShould {
     char character2 = 'I';
     char character3 = '\n';
     char character4 = 'K';
-    when(source.getChar()).thenReturn(character1)
-            .thenReturn(character2)
-            .thenReturn(character3)
-            .thenReturn(character4);
+    sourceStub.setInput(List.of(character1, character2, character3, character4));
 
     copier.copy();
 
@@ -75,6 +73,25 @@ public class CopierShould {
 
     public List<Character> getCharsCalled() {
       return charsCalled;
+    }
+  }
+
+  private class SourceStub implements Source {
+    private List<Character> input;
+    private int timesCalled = 0;
+
+    public char getChar() {
+      char next = input.get(timesCalled);
+      timesCalled++;
+      return next;
+    }
+
+    public void setInput(List<Character> input) {
+      this.input = input;
+    }
+
+    public int timesCalled() {
+      return timesCalled;
     }
   }
 }
