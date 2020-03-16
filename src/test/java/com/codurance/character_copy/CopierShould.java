@@ -22,6 +22,7 @@ public class CopierShould {
 
   @Test
   void destination_should_receive_characters() {
+    when(source.getChar()).thenReturn('\n');
     copier.copy();
     verify(source).getChar();
   }
@@ -29,7 +30,8 @@ public class CopierShould {
   @Test
   void forward_character_to_the_destination() {
     char character = 'H';
-    when(source.getChar()).thenReturn(character);
+    when(source.getChar()).thenReturn(character)
+            .thenReturn('\n');
     copier.copy();
     verify(destination).setChar(character);
   }
@@ -44,9 +46,8 @@ public class CopierShould {
             .thenReturn(character2)
             .thenReturn(character3)
             .thenReturn(character4);
-    for (int i = 0; i < 4; i++) {
-      copier.copy();
-    }
+
+    copier.copy();
 
     verify(destination).setChar(character1);
     verify(destination).setChar(character2);

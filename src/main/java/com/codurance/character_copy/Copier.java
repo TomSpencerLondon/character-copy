@@ -3,7 +3,6 @@ package com.codurance.character_copy;
 public class Copier {
   private Destination destination;
   private Source source;
-  private boolean newLineCalled;
 
   public Copier(Source source, Destination destination) {
     this.source = source;
@@ -11,13 +10,12 @@ public class Copier {
   }
 
   public void copy() {
-    char character = source.getChar();
-    if (character == '\n'){
-      newLineCalled = true;
+    while (true) {
+      char character = source.getChar();
+      if (character == '\n') {
+        break;
+      }
+      destination.setChar(character);
     }
-    if (newLineCalled){
-      return;
-    }
-    destination.setChar(character);
   }
 }
