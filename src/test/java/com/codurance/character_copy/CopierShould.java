@@ -2,19 +2,21 @@ package com.codurance.character_copy;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class CopierShould {
 
-  private Source source;
-  private Destination destination;
+  @Mock Source source;
+  @Mock Destination destination;
   private Copier copier;
 
   @BeforeEach
   void setUp() {
-    source = mock(Source.class);
-    destination = mock(Destination.class);
     copier = new Copier(source, destination);
   }
 
