@@ -5,12 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class CopierShould {
@@ -60,38 +57,4 @@ public class CopierShould {
     assertFalse(destinationSpy.getCharsCalled().contains(character4));
   }
 
-  private class DestinationSpy implements Destination {
-    private List<Character> charsCalled;
-
-    public DestinationSpy() {
-      this.charsCalled = new ArrayList<>();
-    }
-
-    public void setChar(char character) {
-      charsCalled.add(character);
-    }
-
-    public List<Character> getCharsCalled() {
-      return charsCalled;
-    }
-  }
-
-  private class SourceStub implements Source {
-    private List<Character> input;
-    private int timesCalled = 0;
-
-    public char getChar() {
-      char next = input.get(timesCalled);
-      timesCalled++;
-      return next;
-    }
-
-    public void setInput(List<Character> input) {
-      this.input = input;
-    }
-
-    public int timesCalled() {
-      return timesCalled;
-    }
-  }
 }
