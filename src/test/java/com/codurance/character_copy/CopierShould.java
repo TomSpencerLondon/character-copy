@@ -54,4 +54,7 @@ public class CopierShould {
     verify(destination, never()).setChar(character3);
     verify(destination, never()).setChar(character4);
   }
+
+//  private class destinationSpy implements Destination {
+//  }
 }

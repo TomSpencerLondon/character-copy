@@ -1,7 +1,5 @@
 package com.codurance.character_copy;
 
-public class Source {
-  public char getChar() {
-    throw new UnsupportedOperationException();
-  }
+public interface Source {
+  char getChar();
 }
